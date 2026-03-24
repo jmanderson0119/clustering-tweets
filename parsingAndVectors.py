@@ -16,14 +16,22 @@ df.columns = ["id", "timestamp", "text"]
 def clean_text(text):
     text = str(text)
     
-    #remove URLs
-    text = re.sub(r"http\S+|www\S+", "", text)
-    #remove mentions and hashtags
-    text = re.sub(r"@\w+", "", text)
-    text = re.sub(r"#\w+", "", text)
+    # remove leading 'RT' (retweet)
+    text = re.sub(r"^\s*rt\s+", "", text, flags=re.IGNORECASE)
     
-    #remove punctuation and numbers
+    # remove URLs
+    text = re.sub(r"http\S+|www\S+", "", text)
+    
+    # remove mentions
+    text = re.sub(r"@\w+", "", text)
+    
+    # remove hashtag symbol but keep the word
+    text = re.sub(r"#", "", text)
+    
+    # remove punctuation and numbers
     text = re.sub(r"[^a-zA-Z\s]", "", text)
+    
+    # convert to lowercase
     text = text.lower()
     
     return text
@@ -61,6 +69,8 @@ from scipy.sparse import save_npz
 from scipy.io import mmwrite
 save_npz("tweet_features.npz", X)
 mmwrite("tweet_features.mtx", X)
+
+df["clean_text"].to_csv("cleaned_tweets.txt", index=False, header=False)
 
 #a few sanity checks
 
