@@ -19,33 +19,7 @@ condensed = squareform(dist_matrix, checks=False)
 
 # Average link hierarchical clustering, returns a linkage matrix
 dendro = linkage(condensed, method='average')
-
-# Searches over a range of k values using silhouette as a guiding heuristic
-# the optimum is actually 1531 and gives good cohesion and separation, and also finds
-# meaningful clusterings, but its not very amenable to the heatmap visual nor the data itself. 
-# This still shows the few standout clusters, but the performance is not as good
-k_range = range(2, 100)
-silhouette_scores = []
-
-for k in k_range:
-    labels_k = fcluster(dendro, k, criterion='maxclust')
-    score = silhouette_score(dist_matrix, labels_k, metric='precomputed')
-    silhouette_scores.append(score)
-    print(f"k: {k} silhouette: {score}")
-
-plt.figure(figsize=(8, 4))
-plt.plot(list(k_range), silhouette_scores, marker='o', markersize=0.5, linewidth=0.5, color='purple')
-plt.title("Silhouette Score vs. Number of Clusters")
-plt.xlabel("Number of Clusters")
-plt.ylabel("Silhouette Score")
-plt.tight_layout()
-plt.savefig("../figures/avg_link_silhouette_sweep.png", dpi=600)
-plt.show()
-
-best_k = list(k_range)[np.argmax(silhouette_scores)]
-print(f"Best: {best_k}")
-
-labels = fcluster(dendro, best_k, criterion='maxclust')
+labels = fcluster(dendro, 49, criterion='maxclust')
 np.savetxt("avg_link_labels.txt", labels, fmt="%d")
 
 # Cluster size distribution
@@ -56,7 +30,7 @@ plt.title("Cluster Size Distribution")
 plt.xlabel("Cluster")
 plt.ylabel("Number of Tweets")
 plt.tight_layout()
-plt.savefig("../figures/avg_link_cluster_sizes.png", dpi=150)
+plt.savefig("../figures/avg_link_cluster_sizes.png", dpi=600)
 plt.show()
 
 # Cohesion, separation, silhouette
