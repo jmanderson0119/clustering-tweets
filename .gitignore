@@ -1,3 +1,7 @@
 data/
-figures/
 __pycache__/
+
+cosine_similarity.txt
+jaccard_similarity.txt
+tweet_features.mtx
+tweet_features.npz

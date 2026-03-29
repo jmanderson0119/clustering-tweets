@@ -1,10 +1,9 @@
 import pandas as pd
 import re
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import numpy as np
 
 #loading data
-input_file = "cnnhealth.txt"   
+input_file = "../data/cnnhealth.txt"   
 
 with open(input_file, "r", encoding="utf-8") as f:
     lines = [re.sub(r"\|\s+", " ", line) for line in f]
